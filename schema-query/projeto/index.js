@@ -1,49 +1,69 @@
 const { ApolloServer, gql } = require("apollo-server");
 
 const typeDefs = gql`
-    scalar Date
+  scalar Date
 
-    type Usuario {
-        id: ID
-        nome: String
-        email: String
-        idade: Int
-        salario: Float
-        vip: Boolean
-    }
+  type Usuario {
+    id: ID
+    nome: String
+    email: String
+    idade: Int
+    salario: Float
+    vip: Boolean
+  }
 
-    # retornar Date só é possível por conta da declaração scalar
-    type Query {
-        ola: String
-        horaAtual: Date
-        usuarioLogado: Usuario
-    }
+  type Produto {
+    nome: String!
+    preco: Float!
+    desconto: Float
+    precoComDesconto: Float
+  }
+
+  # retornar Date só é possível por conta da declaração scalar
+  type Query {
+    ola: String
+    horaAtual: Date
+    usuarioLogado: Usuario
+    produtoEmDestaque: Produto
+  }
 `;
 
 const resolvers = {
-    Usuario: {
-        salario(usuario){
-            return usuario.salario_real
-        }
-    },
-    Query: {
-        ola(){
-            return 'E aí!'
-        },
-        horaAtual(){
-            return new Date
-        },
-        usuarioLogado(){
-            return {
-                id: 1,
-                nome: 'Fulano da Silva',
-                email: 'ful.silvvva@mail.com',
-                idade: 23,
-                salario_real: 3233.23,
-                vip: true
-            }
-        }
+  Usuario: {
+    salario(usuario) {
+      return usuario.salario_real;
     }
+  },
+  Produto: {
+      precoComDesconto(produto){
+          return produto.desconto ? produto.preco * (1 - produto.desconto) : produto.preco
+      }
+  },
+  Query: {
+    ola() {
+      return "E aí!";
+    },
+    horaAtual() {
+      return new Date();
+    },
+    usuarioLogado() {
+      return {
+        id: 1,
+        nome: "Fulano da Silva",
+        email: "ful.silvvva@mail.com",
+        idade: 23,
+        salario_real: 3233.23,
+        vip: true
+      };
+    },
+    produtoEmDestaque() {
+      return {
+        nome: "TV LG 32 polegadas",
+        preco: 1502.23,
+        desconto: 0.32
+      };
+    }
+  }
 };
 
 const server = new ApolloServer({
@@ -52,12 +72,11 @@ const server = new ApolloServer({
 });
 
 server.listen().then(({ url }) => {
-  console.log(`Servidor sendo executado em: ${url}`); 
+  console.log(`Servidor sendo executado em: ${url}`);
 });
 
-
 /**
- * 
+ *
  * Os tipos aceitos por padrão pelo GraphQL são:
  * String
  * Int
