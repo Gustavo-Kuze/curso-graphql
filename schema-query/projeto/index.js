@@ -3,6 +3,7 @@ const { ApolloServer, gql } = require("apollo-server");
 const typeDefs = gql`
     type Query {
         ola: String
+        horaAtual: String
     }
 `;
 
@@ -10,6 +11,9 @@ const resolvers = {
     Query: {
         ola(){
             return 'E aí!'
+        },
+        horaAtual(){
+            return `A hora atual é: ${new Date()}`
         }
     }
 };
