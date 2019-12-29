@@ -1,104 +1,11 @@
-const { ApolloServer, gql } = require("apollo-server");
+const { ApolloServer } = require("apollo-server");
+const { importSchema } = require('graphql-import')
+const resolvers = require('./resolvers')
 
-const usuariosArray = [
-  {
-    id: 1,
-    nome: "Fulano dos Santos",
-    idade: 32,
-    email: "aksjdh@aksjdh.com"
-  },
-  {
-    id: 2,
-    nome: "Ciclano Gomes",
-    idade: 33,
-    email: "gomes.ciclano@cicla.com"
-  },
-  {
-    id: 3,
-    nome: "Bora Man",
-    idade: 13,
-    email: "bora.man@mail.com"
-  }
-];
-
-const typeDefs = gql`
-  scalar Date
-
-  type Usuario {
-    id: ID
-    nome: String
-    email: String
-    idade: Int
-    salario: Float
-    vip: Boolean
-  }
-
-  type Produto {
-    nome: String!
-    preco: Float!
-    desconto: Float
-    precoComDesconto: Float
-  }
-
-  # retornar Date só é possível por conta da declaração scalar
-  type Query {
-    ola: String
-    horaAtual: Date
-    usuarioLogado: Usuario
-    produtoEmDestaque: Produto
-    usuarios: [Usuario!]!
-    usuarioPorId(id: ID): Usuario
-  }
-`;
-
-const resolvers = {
-  Usuario: {
-    salario(usuario) {
-      return usuario.salario_real;
-    }
-  },
-  Produto: {
-    precoComDesconto(produto) {
-      return produto.desconto
-        ? produto.preco * (1 - produto.desconto)
-        : produto.preco;
-    }
-  },
-  Query: {
-    ola() {
-      return "E aí!";
-    },
-    horaAtual() {
-      return new Date();
-    },
-    usuarioLogado() {
-      return {
-        id: 1,
-        nome: "Fulano da Silva",
-        email: "ful.silvvva@mail.com",
-        idade: 23,
-        salario_real: 3233.23,
-        vip: true
-      };
-    },
-    produtoEmDestaque() {
-      return {
-        nome: "TV LG 32 polegadas",
-        preco: 1502.23,
-        desconto: 0.32
-      };
-    },
-    usuarios() {
-      return usuariosArray;
-    },
-    usuarioPorId(_, {id}) {
-      return usuariosArray.find(u => u.id == id);
-    }
-  }
-};
+const schemaPath = './schema/index.graphql'
 
 const server = new ApolloServer({
-  typeDefs,
+  typeDefs: importSchema(schemaPath),
   resolvers
 });
 
