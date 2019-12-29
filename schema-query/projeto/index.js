@@ -47,6 +47,7 @@ const typeDefs = gql`
     usuarioLogado: Usuario
     produtoEmDestaque: Produto
     usuarios: [Usuario!]!
+    usuarioPorId(id: ID): Usuario
   }
 `;
 
@@ -89,6 +90,9 @@ const resolvers = {
     },
     usuarios() {
       return usuariosArray;
+    },
+    usuarioPorId(_, {id}) {
+      return usuariosArray.find(u => u.id == id);
     }
   }
 };
