@@ -1,0 +1,16 @@
+{
+  "name": "banco-de-dados",
+  "version": "1.0.0",
+  "description": "Capítulo de integração de bancos de dados com GraphQL",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "Gustavo Kuze",
+  "license": "ISC",
+  "dependencies": {
+    "knex": "^0.20.6",
+    "mysql": "^2.17.1"
+  }
+}
